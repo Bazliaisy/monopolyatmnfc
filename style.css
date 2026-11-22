@@ -285,6 +285,8 @@ main{max-width:600px;margin:0 auto;padding:8px 16px}
 .h-amt{font-weight:800;white-space:nowrap}
 .h-amt.pos{color:var(--good-ink)}.h-amt.neg{color:var(--bad-ink)}.h-amt.neu{color:var(--text)}
 
+.legal{max-width:600px;margin:6px auto 0;padding:0 24px;text-align:center;font-size:11px;line-height:1.5;color:var(--muted);opacity:.75}
+
 /* ================= Tab bar ================= */
 .tabbar{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:4px;
   padding:8px 10px calc(8px + var(--safe-b));background:var(--bar-bg);

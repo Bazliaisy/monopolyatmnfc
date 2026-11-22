@@ -79,6 +79,7 @@ const I18N = {
     wipe_title: 'Delete all data?', wipe_body: 'All players, cards and history will be deleted. This cannot be undone.',
     wipe_ok: 'Delete all', wiped: 'Everything deleted',
     max_players: 'Maximum {n} players', name_exists: 'Name already exists',
+    legal: '© Unofficial fan project. Not affiliated with or endorsed by Hasbro. Monopoly is a trademark of Hasbro, Inc.',
     close: 'Close', set_theme: 'Theme', theme_auto: 'Auto', theme_dark: 'Dark', theme_light: 'Light', theme_glass: 'Glass',
     set_accent: 'Accent colour', acc_blue: 'Blue', acc_green: 'Green', acc_purple: 'Purple', acc_orange: 'Orange', acc_pink: 'Pink'
   },
@@ -144,6 +145,7 @@ const I18N = {
     wipe_title: 'Padam semua data?', wipe_body: 'Semua pemain, kad dan sejarah akan dipadam. Tindakan ini tidak boleh dibuat asal.',
     wipe_ok: 'Padam semua', wiped: 'Semua dipadam',
     max_players: 'Maksimum {n} pemain', name_exists: 'Nama sudah wujud',
+    legal: '© Projek peminat tidak rasmi. Tiada kaitan dengan atau disokong oleh Hasbro. Monopoly ialah tanda dagangan Hasbro, Inc.',
     close: 'Tutup', set_theme: 'Tema', theme_auto: 'Auto', theme_dark: 'Gelap', theme_light: 'Cerah', theme_glass: 'Kaca',
     set_accent: 'Warna aksen', acc_blue: 'Biru', acc_green: 'Hijau', acc_purple: 'Ungu', acc_orange: 'Jingga', acc_pink: 'Merah jambu'
   }
