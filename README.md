@@ -15,7 +15,7 @@ A digital bank for Monopoly that runs in the browser and uses NFC cards. Tap a c
 - **Custom dialogs and SVG icons.** No native browser pop-ups and no emoji.
 - **English by default**, with Bahasa Melayu available in Settings.
 - **Swipeable bottom navigation.** Swipe left or right to change tabs.
-- **Themes.** Auto, Dark or Light, plus five accent colours.
+- **Themes.** Auto, Dark, Light or Liquid Glass (frosted, translucent look), plus five accent colours.
 - **Simulation mode** to try the app without NFC by picking cards on screen.
 - **Saved automatically** in the browser (localStorage).
 
@@ -42,8 +42,8 @@ Any NFC tag works, including NTAG213/215/216 stickers and cards. Nothing is writ
 No build step or dependencies are needed.
 
 ```bash
-git clone https://github.com/Bazliaisy/monopolyatmnfc.git
-cd monopolyatmnfc
+git clone https://github.com/<your-username>/<your-repo>.git
+cd <your-repo>
 python3 -m http.server 8080
 ```
 
@@ -80,7 +80,6 @@ The service worker caches the app. After changing any file, bump the cache name 
 
 This is an unofficial fan project for personal use. It is not affiliated with or endorsed by Hasbro. Monopoly is a trademark of Hasbro, Inc.
 
+## License
 
-## Licence 
-
-Realesed under the [MIT License](LICENSE)
+Released under the [MIT License](LICENSE).

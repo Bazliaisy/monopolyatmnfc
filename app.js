@@ -12,7 +12,7 @@ const PALETTE = ['#ef4444', '#f59e0b', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6
 const KEY = 'monopoly-bank-nfc-v1';
 const MAX_PLAYERS = 8;
 const TABS = ['players', 'transfer', 'bank', 'history'];
-const THEMES = ['auto', 'dark', 'light'];
+const THEMES = ['auto', 'dark', 'light', 'glass'];
 const ACCENTS = ['blue', 'green', 'purple', 'orange', 'pink'];
 
 /* ================= Languages ================= */
@@ -79,7 +79,7 @@ const I18N = {
     wipe_title: 'Delete all data?', wipe_body: 'All players, cards and history will be deleted. This cannot be undone.',
     wipe_ok: 'Delete all', wiped: 'Everything deleted',
     max_players: 'Maximum {n} players', name_exists: 'Name already exists',
-    close: 'Close', set_theme: 'Theme', theme_auto: 'Auto', theme_dark: 'Dark', theme_light: 'Light',
+    close: 'Close', set_theme: 'Theme', theme_auto: 'Auto', theme_dark: 'Dark', theme_light: 'Light', theme_glass: 'Glass',
     set_accent: 'Accent colour', acc_blue: 'Blue', acc_green: 'Green', acc_purple: 'Purple', acc_orange: 'Orange', acc_pink: 'Pink'
   },
   ms: {
@@ -144,7 +144,7 @@ const I18N = {
     wipe_title: 'Padam semua data?', wipe_body: 'Semua pemain, kad dan sejarah akan dipadam. Tindakan ini tidak boleh dibuat asal.',
     wipe_ok: 'Padam semua', wiped: 'Semua dipadam',
     max_players: 'Maksimum {n} pemain', name_exists: 'Nama sudah wujud',
-    close: 'Tutup', set_theme: 'Tema', theme_auto: 'Auto', theme_dark: 'Gelap', theme_light: 'Cerah',
+    close: 'Tutup', set_theme: 'Tema', theme_auto: 'Auto', theme_dark: 'Gelap', theme_light: 'Cerah', theme_glass: 'Kaca',
     set_accent: 'Warna aksen', acc_blue: 'Biru', acc_green: 'Hijau', acc_purple: 'Ungu', acc_orange: 'Jingga', acc_pink: 'Merah jambu'
   }
 };
@@ -210,7 +210,7 @@ function applyI18n() {
 const lightQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: light)') : null;
 function resolvedTheme() {
   const m = state.settings.theme;
-  if (m === 'light' || m === 'dark') return m;
+  if (m === 'light' || m === 'dark' || m === 'glass') return m;
   return lightQuery && lightQuery.matches ? 'light' : 'dark';
 }
 function applyTheme() {
@@ -219,7 +219,7 @@ function applyTheme() {
   root.setAttribute('data-theme', th);
   root.setAttribute('data-accent', state.settings.accent);
   const meta = $('meta[name="theme-color"]');
-  if (meta) meta.setAttribute('content', th === 'light' ? '#f3f6fc' : '#0b1220');
+  if (meta) meta.setAttribute('content', th === 'light' ? '#f3f6fc' : th === 'glass' ? '#0a0d24' : '#0b1220');
   $$('#setTheme button').forEach(b => b.classList.toggle('active', b.dataset.v === state.settings.theme));
   $$('#setAccent .sw').forEach(b => b.classList.toggle('active', b.dataset.v === state.settings.accent));
 }

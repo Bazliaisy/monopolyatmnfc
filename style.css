@@ -55,6 +55,101 @@
   --shadow:0 1px 2px rgba(15,23,42,.06),0 8px 20px rgba(15,23,42,.06);
   color-scheme:light;
 }
+
+/* ================= Liquid Glass theme ================= */
+[data-theme="glass"]{
+  --bg:#060818;
+  --bg2:rgba(255,255,255,.04);
+  --card:rgba(255,255,255,.10);
+  --card2:rgba(255,255,255,.14);
+  --line:rgba(255,255,255,.22);
+  --text:#ffffff;
+  --muted:rgba(232,238,255,.72);
+  --s1:rgba(255,255,255,.08);
+  --s2:rgba(255,255,255,.13);
+  --s3:rgba(255,255,255,.20);
+  --input-bg:rgba(255,255,255,.09);
+  --bar-bg:rgba(255,255,255,.12);
+  --backdrop:rgba(8,10,30,.38);
+  --sheet1:rgba(255,255,255,.17);
+  --sheet2:rgba(255,255,255,.08);
+  --toast-bg:rgba(30,34,64,.62);
+  --toast-text:#fff;
+  --good-ink:#7cf5ab;
+  --bad-ink:#ff9a9a;
+  --warn:#ffc85a;
+  --accent-ink:var(--accent);
+  --tab-active-text:#fff;
+  --shadow:0 12px 32px rgba(0,0,0,.30),inset 1px 1px 0 rgba(255,255,255,.50),inset -1px -1px 0 rgba(255,255,255,.10);
+  --radius:26px;
+  color-scheme:dark;
+}
+[data-theme="glass"] html,html[data-theme="glass"]{background:#060818}
+[data-theme="glass"] body{background:transparent;padding-bottom:calc(104px + var(--safe-b))}
+/* drifting colour blobs behind the glass */
+[data-theme="glass"] body::before{content:"";position:fixed;inset:-25%;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(38% 30% at 20% 18%, color-mix(in srgb,var(--primary) 85%,transparent), transparent 70%),
+    radial-gradient(34% 28% at 82% 24%, color-mix(in srgb,var(--accent) 70%,transparent), transparent 70%),
+    radial-gradient(40% 32% at 70% 80%, rgba(255,95,162,.55), transparent 70%),
+    radial-gradient(36% 30% at 14% 82%, rgba(124,92,255,.60), transparent 70%);
+  filter:saturate(1.2);animation:aurora 26s ease-in-out infinite alternate;will-change:transform}
+@keyframes aurora{
+  0%{transform:translate3d(-3%,-2%,0) rotate(0deg) scale(1)}
+  50%{transform:translate3d(4%,3%,0) rotate(8deg) scale(1.12)}
+  100%{transform:translate3d(-2%,5%,0) rotate(-6deg) scale(1.05)}
+}
+[data-theme="glass"] .card,
+[data-theme="glass"] .player,
+[data-theme="glass"] .hero{
+  background:linear-gradient(135deg,rgba(255,255,255,.20),rgba(255,255,255,.05) 45%,rgba(255,255,255,.10));
+  border:1px solid rgba(255,255,255,.20);
+  -webkit-backdrop-filter:blur(26px) saturate(190%);backdrop-filter:blur(26px) saturate(190%);
+  box-shadow:var(--shadow)}
+[data-theme="glass"] .player{border-left:6px solid var(--pc,#888)}
+[data-theme="glass"] .hero{background:linear-gradient(135deg,color-mix(in srgb,var(--primary) 38%,rgba(255,255,255,.12)),rgba(255,255,255,.06) 60%,color-mix(in srgb,var(--accent) 28%,rgba(255,255,255,.08)))}
+[data-theme="glass"] .quick,
+[data-theme="glass"] .amt-box,
+[data-theme="glass"] .add-form input,
+[data-theme="glass"] .field input,
+[data-theme="glass"] .field select,
+[data-theme="glass"] .sim-btn,
+[data-theme="glass"] .seg{
+  border:1px solid rgba(255,255,255,.22);
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.28),inset -1px -1px 0 rgba(255,255,255,.06)}
+[data-theme="glass"] .field select option{background:#1b2040;color:#fff}
+[data-theme="glass"] .btn{border:1px solid rgba(255,255,255,.22);
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.35),inset -1px -1px 0 rgba(255,255,255,.08)}
+[data-theme="glass"] .btn.primary{background:linear-gradient(135deg,color-mix(in srgb,var(--primary) 85%,#fff),var(--primary))}
+[data-theme="glass"] .btn.good{background:linear-gradient(135deg,rgba(34,197,94,.9),rgba(74,222,128,.9));color:#04210f}
+[data-theme="glass"] .btn.bad{background:linear-gradient(135deg,rgba(239,68,68,.9),rgba(248,113,113,.9))}
+[data-theme="glass"] .icon-btn,
+[data-theme="glass"] .chip{border:1px solid rgba(255,255,255,.2);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.35)}
+/* floating glass capsule tab bar */
+[data-theme="glass"] .tabbar{left:12px;right:12px;bottom:calc(10px + var(--safe-b));margin:0 auto;max-width:560px;
+  padding:7px;border:1px solid rgba(255,255,255,.28);border-radius:34px;
+  background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.08));
+  -webkit-backdrop-filter:blur(30px) saturate(200%);backdrop-filter:blur(30px) saturate(200%);
+  box-shadow:0 14px 36px rgba(0,0,0,.38),inset 1px 1px 0 rgba(255,255,255,.55),inset -1px -1px 0 rgba(255,255,255,.12)}
+[data-theme="glass"] .tab{border-radius:26px}
+[data-theme="glass"] .tab-pill{border-radius:26px;
+  background:linear-gradient(180deg,rgba(255,255,255,.34),rgba(255,255,255,.14));
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.7),inset -1px -1px 0 rgba(255,255,255,.18),0 4px 14px rgba(0,0,0,.22)}
+[data-theme="glass"] .sheet{
+  background:linear-gradient(145deg,rgba(255,255,255,.26),rgba(255,255,255,.08) 55%,rgba(255,255,255,.14));
+  border:1px solid rgba(255,255,255,.30);border-radius:32px;
+  -webkit-backdrop-filter:blur(36px) saturate(200%);backdrop-filter:blur(36px) saturate(200%);
+  box-shadow:0 24px 60px rgba(0,0,0,.45),inset 1px 1px 0 rgba(255,255,255,.6),inset -1px -1px 0 rgba(255,255,255,.14)}
+[data-theme="glass"] .x-btn{background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.28);
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.4)}
+[data-theme="glass"] .toast{-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
+  border:1px solid rgba(255,255,255,.28);box-shadow:inset 1px 1px 0 rgba(255,255,255,.4)}
+[data-theme="glass"] .seg button.active{background:linear-gradient(180deg,rgba(255,255,255,.38),rgba(255,255,255,.16));
+  color:#fff;box-shadow:inset 1px 1px 0 rgba(255,255,255,.7),0 3px 10px rgba(0,0,0,.2)}
+[data-theme="glass"] .h-item{border-color:rgba(255,255,255,.16)}
+
 /* Accent colours */
 :root,[data-accent="blue"]  {--primary:#2f80ff;--primary2:#5aa0ff;--accent:#3dd9a0}
 [data-accent="green"] {--primary:#12b76a;--primary2:#34d399;--accent:#5eead4}
@@ -266,7 +361,7 @@ main{max-width:600px;margin:0 auto;padding:8px 16px}
 .check{display:flex;gap:10px;align-items:center;font-size:14px;margin:14px 0}
 .check input{width:20px;height:20px}
 #setClose{margin-top:12px}
-.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;margin-top:6px;
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px;margin-top:6px;
   background:var(--input-bg);border:1px solid var(--line);border-radius:14px}
 .seg button{padding:10px 6px;border-radius:10px;background:transparent;color:var(--muted);
   font-weight:700;font-size:13px;transition:background .25s,color .25s}
@@ -300,4 +395,5 @@ main{overflow-x:clip}
   .view.active.from-right,.view.active.from-left{animation:none}
   .tab-pill{transition:none}
   .tab.active .ico{animation:none}
+  [data-theme="glass"] body::before{animation:none}
 }

@@ -13,7 +13,7 @@
     var s = (JSON.parse(localStorage.getItem('monopoly-bank-nfc-v1')) || {}).settings || {};
     var th = s.theme || 'dark';
     if (th === 'auto') th = (window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', th === 'light' ? 'light' : 'dark');
+    document.documentElement.setAttribute('data-theme', (th === 'light' || th === 'glass') ? th : 'dark');
     document.documentElement.setAttribute('data-accent', s.accent || 'blue');
   } catch (e) {}
   </script>
@@ -170,6 +170,7 @@
         <button type="button" data-v="auto" data-i18n="theme_auto"></button>
         <button type="button" data-v="dark" data-i18n="theme_dark"></button>
         <button type="button" data-v="light" data-i18n="theme_light"></button>
+        <button type="button" data-v="glass" data-i18n="theme_glass"></button>
       </div>
     </div>
     <div class="field"><span data-i18n="set_accent"></span>
