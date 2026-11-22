@@ -10,6 +10,9 @@ const NOTE_COLORS = {
 };
 const PALETTE = ['#ef4444', '#f59e0b', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899', '#a3a3a3'];
 const KEY = 'monopoly-bank-nfc-v1';
+const APP_VERSION = '1.2.0';
+const BIG_TRANSFER = 500;
+const RENT_CHIPS = [2, 4, 6, 10, 14, 20, 26, 35, 50, 100];
 const MAX_PLAYERS = 8;
 const TABS = ['players', 'transfer', 'bank', 'history'];
 const THEMES = ['auto', 'dark', 'light', 'glass'];
@@ -80,6 +83,24 @@ const I18N = {
     wipe_ok: 'Delete all', wiped: 'Everything deleted',
     max_players: 'Maximum {n} players', name_exists: 'Name already exists',
     legal: '© Unofficial fan project. Not affiliated with or endorsed by Hasbro. Monopoly is a trademark of Hasbro, Inc.',
+    dismiss: 'Dismiss',
+    nfc_unsupported: 'NFC is not available in this browser. Use Chrome on Android with NFC turned on, or enable Simulation mode in Settings.',
+    nfc_ios: 'iPhone and iPad browsers do not support Web NFC. Use an Android phone with Chrome, or use Simulation mode in Settings.',
+    rank_title: 'Ranking',
+    edit: 'Edit', edit_title: 'Edit player', edit_name: 'Name', edit_color: 'Colour', save: 'Save', saved: 'Saved',
+    quick_amounts: 'Quick amounts',
+    bank_note_label: 'Reason (optional)', note_none: 'Other', note_mortgage: 'Mortgage', note_redeem: 'Redeem mortgage',
+    note_property: 'Property', note_buildings: 'Houses & hotels', note_auction: 'Auction',
+    pot_title: 'Free Parking pot', pot_desc: 'Taxes and fines go into the pot. Collect it when a player lands on Free Parking.',
+    pot_collect: 'Collect pot', pot_collect_hint: 'Scan the player who landed on Free Parking to collect {amt}.',
+    pot_empty: 'The pot is empty.', pot_collected: 'Pot collected', note_pot: 'Free Parking',
+    set_pot: 'Free Parking pot (taxes and fines go into the pot)',
+    set_confirm: 'Confirm transfers of {amt} or more', set_wake: 'Keep screen on while playing',
+    confirm_tx_title: 'Confirm transfer', confirm_tx_body: '{from} pays {to} {amt}.', confirm_send: 'Send',
+    set_backup: 'Backup', export_btn: 'Export backup', import_btn: 'Import backup', exported: 'Backup saved',
+    import_title: 'Import backup?', import_body: 'This replaces all current players, history and settings.',
+    import_ok: 'Import', imported: 'Backup imported', import_bad: 'That file is not a valid backup.',
+    hist_all: 'All players', csv_btn: 'CSV', csv_empty: 'No transactions to export.', version: 'Version',
     close: 'Close', set_theme: 'Theme', theme_auto: 'Auto', theme_dark: 'Dark', theme_light: 'Light', theme_glass: 'Glass',
     set_accent: 'Accent colour', acc_blue: 'Blue', acc_green: 'Green', acc_purple: 'Purple', acc_orange: 'Orange', acc_pink: 'Pink'
   },
@@ -146,6 +167,24 @@ const I18N = {
     wipe_ok: 'Padam semua', wiped: 'Semua dipadam',
     max_players: 'Maksimum {n} pemain', name_exists: 'Nama sudah wujud',
     legal: '© Projek peminat tidak rasmi. Tiada kaitan dengan atau disokong oleh Hasbro. Monopoly ialah tanda dagangan Hasbro, Inc.',
+    dismiss: 'Tutup',
+    nfc_unsupported: 'NFC tidak tersedia dalam pelayar ini. Guna Chrome di Android dengan NFC dihidupkan, atau aktifkan Mod simulasi dalam Tetapan.',
+    nfc_ios: 'Pelayar iPhone dan iPad tidak menyokong Web NFC. Guna telefon Android dengan Chrome, atau guna Mod simulasi dalam Tetapan.',
+    rank_title: 'Kedudukan',
+    edit: 'Edit', edit_title: 'Edit pemain', edit_name: 'Nama', edit_color: 'Warna', save: 'Simpan', saved: 'Disimpan',
+    quick_amounts: 'Jumlah pantas',
+    bank_note_label: 'Sebab (pilihan)', note_none: 'Lain-lain', note_mortgage: 'Gadai', note_redeem: 'Tebus gadaian',
+    note_property: 'Harta', note_buildings: 'Rumah & hotel', note_auction: 'Lelongan',
+    pot_title: 'Pot Free Parking', pot_desc: 'Cukai dan denda masuk ke dalam pot. Ambil bila pemain berhenti di Free Parking.',
+    pot_collect: 'Ambil pot', pot_collect_hint: 'Imbas pemain yang berhenti di Free Parking untuk ambil {amt}.',
+    pot_empty: 'Pot kosong.', pot_collected: 'Pot diambil', note_pot: 'Free Parking',
+    set_pot: 'Pot Free Parking (cukai dan denda masuk pot)',
+    set_confirm: 'Sahkan pemindahan {amt} atau lebih', set_wake: 'Kekalkan skrin hidup semasa bermain',
+    confirm_tx_title: 'Sahkan pemindahan', confirm_tx_body: '{from} bayar {to} {amt}.', confirm_send: 'Hantar',
+    set_backup: 'Sandaran', export_btn: 'Eksport sandaran', import_btn: 'Import sandaran', exported: 'Sandaran disimpan',
+    import_title: 'Import sandaran?', import_body: 'Ini menggantikan semua pemain, sejarah dan tetapan semasa.',
+    import_ok: 'Import', imported: 'Sandaran diimport', import_bad: 'Fail itu bukan sandaran yang sah.',
+    hist_all: 'Semua pemain', csv_btn: 'CSV', csv_empty: 'Tiada transaksi untuk dieksport.', version: 'Versi',
     close: 'Tutup', set_theme: 'Tema', theme_auto: 'Auto', theme_dark: 'Gelap', theme_light: 'Cerah', theme_glass: 'Kaca',
     set_accent: 'Warna aksen', acc_blue: 'Biru', acc_green: 'Hijau', acc_purple: 'Ungu', acc_orange: 'Jingga', acc_pink: 'Merah jambu'
   }
@@ -158,13 +197,14 @@ const LEGACY_NOTES = {
 
 /* ================= State ================= */
 function defaultState() {
-  return { players: [], history: [], settings: { start: 1500, symbol: 'M', sim: false, sound: true, lang: 'en', theme: 'dark', accent: 'blue' } };
+  return { players: [], history: [], pot: 0, settings: { start: 1500, symbol: 'M', sim: false, sound: true, lang: 'en', theme: 'dark', accent: 'blue', pot: false, confirmBig: true, wake: true } };
 }
 function load() {
   try {
     const s = JSON.parse(localStorage.getItem(KEY));
     if (s && Array.isArray(s.players)) {
       s.history = s.history || [];
+      s.pot = Math.max(0, Math.floor(Number(s.pot) || 0));
       s.settings = Object.assign(defaultState().settings, s.settings || {});
       if (!I18N[s.settings.lang]) s.settings.lang = 'en';
       if (!THEMES.includes(s.settings.theme)) s.settings.theme = 'dark';
@@ -221,7 +261,7 @@ function applyTheme() {
   root.setAttribute('data-theme', th);
   root.setAttribute('data-accent', state.settings.accent);
   const meta = $('meta[name="theme-color"]');
-  if (meta) meta.setAttribute('content', th === 'light' ? '#f3f6fc' : th === 'glass' ? '#0a0d24' : '#0b1220');
+  if (meta) meta.setAttribute('content', th === 'light' ? '#e6e9ef' : th === 'glass' ? '#0a0d24' : '#07080b');
   $$('#setTheme button').forEach(b => b.classList.toggle('active', b.dataset.v === state.settings.theme));
   $$('#setAccent .sw').forEach(b => b.classList.toggle('active', b.dataset.v === state.settings.accent));
 }
@@ -293,6 +333,67 @@ function breakdown(amount) {
   }
   return out;
 }
+
+/* ================= Backup / export helpers ================= */
+function download(name, text, mime) {
+  const blob = new Blob([text], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+function stamp() {
+  const d = new Date(), p = n => String(n).padStart(2, '0');
+  return d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + '-' + p(d.getHours()) + p(d.getMinutes());
+}
+function normalizeState(raw) {
+  if (!raw || typeof raw !== 'object') return null;
+  const d = raw.data && Array.isArray(raw.data.players) ? raw.data : raw;
+  if (!Array.isArray(d.players) || d.players.length > MAX_PLAYERS) return null;
+  const ids = new Set(), players = [];
+  for (const p of d.players) {
+    if (!p || typeof p !== 'object') return null;
+    const bal = Number(p.balance), id = String(p.id || '');
+    if (!Number.isFinite(bal) || bal < 0 || !id || ids.has(id)) return null;
+    ids.add(id);
+    players.push({
+      id, name: String(p.name || '?').slice(0, 14),
+      color: /^#[0-9a-f]{6}$/i.test(p.color) ? p.color : PALETTE[0],
+      uid: p.uid ? String(p.uid) : null, balance: Math.floor(bal)
+    });
+  }
+  const types = ['transfer', 'bank-in', 'bank-out', 'pot-collect'];
+  const history = (Array.isArray(d.history) ? d.history : [])
+    .filter(h => h && types.includes(h.type) && Number.isFinite(Number(h.amount)))
+    .slice(0, 200).map(h => Object.assign({}, h, { amount: Number(h.amount), t: Number(h.t) || Date.now() }));
+  const def = defaultState().settings;
+  const s = Object.assign({}, def, d.settings && typeof d.settings === 'object' ? d.settings : {});
+  if (!I18N[s.lang]) s.lang = 'en';
+  if (!THEMES.includes(s.theme)) s.theme = 'dark';
+  if (!ACCENTS.includes(s.accent)) s.accent = 'blue';
+  if (!['M', 'RM', '$', '£'].includes(s.symbol)) s.symbol = 'M';
+  s.start = Number.isFinite(Number(s.start)) && Number(s.start) >= 0 ? Math.floor(Number(s.start)) : 1500;
+  ['sim', 'sound', 'pot', 'confirmBig', 'wake'].forEach(k => { s[k] = !!s[k]; });
+  return { players, history, pot: Math.max(0, Math.floor(Number(d.pot) || 0)), settings: s };
+}
+
+/* ================= Keep screen on ================= */
+let wakeLock = null;
+async function applyWake() {
+  try {
+    if (state.settings.wake !== false && 'wakeLock' in navigator && document.visibilityState === 'visible') {
+      if (!wakeLock) {
+        wakeLock = await navigator.wakeLock.request('screen');
+        wakeLock.addEventListener('release', () => { wakeLock = null; });
+      }
+    } else if (wakeLock) {
+      await wakeLock.release(); wakeLock = null;
+    }
+  } catch (e) { wakeLock = null; }
+}
+document.addEventListener('visibilitychange', applyWake);
+document.addEventListener('pointerdown', () => { if (!wakeLock) applyWake(); }, { passive: true });
 
 /* ================= NFC ================= */
 const NFC = {
@@ -478,6 +579,15 @@ async function doTransfer() {
     return showResult('err', t('same_card'), esc(t('same_card_msg')));
   }
 
+  if (state.settings.confirmBig !== false && amt >= BIG_TRANSFER) {
+    const okGo = await askConfirm({
+      title: t('confirm_tx_title'),
+      body: t('confirm_tx_body', { from: sender.name, to: receiver.name, amt: fmt(amt) }),
+      ok: t('confirm_send'), danger: false
+    });
+    if (!okGo) { toast(t('cancelled_transfer')); return; }
+  }
+
   // Re-check and execute
   if (sender.balance < amt) return showResult('warn', t('insufficient'), esc(t('balance_changed')));
   sender.balance -= amt;
@@ -508,11 +618,29 @@ async function doBank(dir, amt, noteKey) {
     return showResult('warn', t('insufficient'), insufficientHtml(p, amt));
   }
   p.balance += dir === 'in' ? amt : -amt;
-  addHist({ type: dir === 'in' ? 'bank-in' : 'bank-out', player: p.id, playerName: p.name, amount: amt, note });
+  const toPot = dir === 'out' && !!state.settings.pot;
+  if (toPot) state.pot = (state.pot || 0) + amt;
+  addHist({ type: dir === 'in' ? 'bank-in' : 'bank-out', player: p.id, playerName: p.name, amount: amt, note, pot: toPot });
   save(); renderAll(); vibe([60, 40, 60]);
   bankAmt.clear();
   await showResult('ok', dir === 'in' ? t('money_received') : t('payment_ok'),
     `<div class="res-line"><span>${esc(p.name)}</span><b>${dir === 'in' ? '+' : '−'}${fmt(amt)}</b></div>
+     <div class="res-line"><span>${esc(t('new_balance'))}</span><b>${fmt(p.balance)}</b></div>`);
+}
+
+async function collectPot() {
+  if (!state.pot) { toast(t('pot_empty')); return; }
+  const amt = state.pot;
+  const uid = await scanCard({ title: t('pot_title'), hint: t('pot_collect_hint', { amt: fmt(amt) }) });
+  if (!uid) { toast(t('cancelled')); return; }
+  const p = byUid(uid);
+  if (!p) return showResult('err', t('unknown_card'), esc(t('unknown_card_msg')));
+  p.balance += amt;
+  state.pot = 0;
+  addHist({ type: 'pot-collect', player: p.id, playerName: p.name, amount: amt });
+  save(); renderAll();
+  await showResult('ok', t('pot_collected'),
+    `<div class="res-line"><span>${esc(p.name)}</span><b>+${fmt(amt)}</b></div>
      <div class="res-line"><span>${esc(t('new_balance'))}</span><b>${fmt(p.balance)}</b></div>`);
 }
 
@@ -550,9 +678,15 @@ async function undoLast() {
     if (!a || !b) return toast(t('player_deleted'));
     if (b.balance < h.amount) return toast(t('recv_low'));
     b.balance -= h.amount; a.balance += h.amount;
+  } else if (h.type === 'pot-collect') {
+    const p = byId(h.player);
+    if (!p) return toast(t('player_deleted'));
+    if (p.balance < h.amount) return toast(t('low_undo'));
+    p.balance -= h.amount; state.pot = (state.pot || 0) + h.amount;
   } else {
     const p = byId(h.player);
     if (!p) return toast(t('player_deleted'));
+    if (h.type === 'bank-out' && h.pot) state.pot = Math.max(0, (state.pot || 0) - h.amount);
     if (h.type === 'bank-in') {
       if (p.balance < h.amount) return toast(t('low_undo'));
       p.balance -= h.amount;
@@ -591,6 +725,7 @@ function amountPicker(root) {
   return {
     get: () => parseInt(input.value, 10) || 0,
     clear: () => { input.value = ''; },
+    set: v => { input.value = String(v); },
     refresh: () => { sym.textContent = state.settings.symbol; }
   };
 }
@@ -617,25 +752,67 @@ function renderPlayers() {
       <div class="notes">${notes || '<span class="note" style="background:#555;color:#fff">' + esc(t('no_money')) + '</span>'}</div>
       <div class="p-actions">
         <button class="btn ghost" data-act="reg">${esc(p.uid ? t('change_card') : t('reg_card'))}</button>
+        <button class="btn ghost" data-act="edit">${esc(t('edit'))}</button>
         <button class="btn ghost" data-act="del">${esc(t('delete'))}</button>
       </div>
     </div>`;
   }).join('');
 }
 
+function renderRank() {
+  const card = $('#rankCard');
+  if (state.players.length < 2) { card.hidden = true; return; }
+  card.hidden = false;
+  const sorted = state.players.slice().sort((a, b) => b.balance - a.balance);
+  const max = Math.max(1, sorted[0].balance);
+  $('#rankList').innerHTML = sorted.map((p, i) =>
+    `<div class="rank-row" style="--pc:${p.color}">
+      <span class="rank-n">${i + 1}</span>
+      <div class="rank-main"><div class="rank-top"><span>${esc(p.name)}</span><b>${fmt(p.balance)}</b></div>
+      <div class="rank-bar"><i style="width:${Math.max(2, Math.round(p.balance / max * 100))}%"></i></div></div>
+    </div>`).join('');
+}
+function renderBankExtras() {
+  const on = !!state.settings.pot;
+  $('#potCard').hidden = !on;
+  $('#potAmt').textContent = fmt(state.pot || 0);
+  $('#btnPot').disabled = !state.pot;
+}
+function renderRentChips() {
+  $('#rentChips').innerHTML = RENT_CHIPS.map(v => `<button type="button" class="amt-chip" data-v="${v}">${fmt(v)}</button>`).join('');
+}
+function renderNfcWarn() {
+  const w = $('#nfcWarn');
+  let dismissed = false;
+  try { dismissed = localStorage.getItem('mb-nfc-warn') === '1'; } catch (e) { /* ignore */ }
+  if (NFC.ok || dismissed) { w.hidden = true; return; }
+  const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  $('#nfcWarnText').textContent = t(ios ? 'nfc_ios' : 'nfc_unsupported');
+  w.hidden = false;
+}
+
+let histFilter = 'all';
 function renderHistory() {
+  const sel = $('#histFilter');
+  if (histFilter !== 'all' && !byId(histFilter)) histFilter = 'all';
+  sel.innerHTML = '<option value="all">' + esc(t('hist_all')) + '</option>' +
+    state.players.map(p => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('');
+  sel.value = histFilter;
   const el = $('#historyList');
-  if (!state.history.length) { el.innerHTML = '<div class="empty">' + esc(t('no_tx_yet')) + '</div>'; return; }
+  const list = histFilter === 'all' ? state.history : state.history.filter(h => h.from === histFilter || h.to === histFilter || h.player === histFilter);
+  if (!list.length) { el.innerHTML = '<div class="empty">' + esc(t('no_tx_yet')) + '</div>'; return; }
   const loc = state.settings.lang === 'ms' ? 'ms-MY' : 'en-GB';
   const time = tm => new Date(tm).toLocaleTimeString(loc, { hour: '2-digit', minute: '2-digit' });
-  el.innerHTML = state.history.map(h => {
+  el.innerHTML = list.map(h => {
     let main, sub, cls, sign;
     if (h.type === 'transfer') {
       main = `${esc(h.fromName)} → ${esc(h.toName)}`; sub = esc(t('player_transfer')); cls = 'neu'; sign = '';
+    } else if (h.type === 'pot-collect') {
+      main = esc(h.playerName); sub = esc(t('note_pot')); cls = 'pos'; sign = '+';
     } else if (h.type === 'bank-in') {
       main = esc(h.playerName); sub = 'Bank → ' + esc(noteLabel(h.note) || t('note_receive')); cls = 'pos'; sign = '+';
     } else {
-      main = esc(h.playerName); sub = 'Bank ← ' + esc(noteLabel(h.note) || t('note_pay')); cls = 'neg'; sign = '−';
+      main = esc(h.playerName); sub = (h.pot ? esc(t('note_pot')) : 'Bank') + ' ← ' + esc(noteLabel(h.note) || t('note_pay')); cls = 'neg'; sign = '−';
     }
     return `<div class="h-item"><div><div class="h-main">${main}</div>
       <div class="h-sub">${sub} · ${time(h.t)}</div></div>
@@ -653,7 +830,9 @@ function renderChip() {
 }
 function renderAll() {
   applyI18n(); applyTheme();
-  renderPlayers(); renderHistory(); renderQuick(); renderChip();
+  renderPlayers(); renderRank(); renderHistory(); renderQuick(); renderChip(); renderBankExtras(); renderRentChips(); renderNfcWarn();
+  $('#setConfirmTxt').textContent = t('set_confirm', { amt: fmt(BIG_TRANSFER) });
+  $('#verLine').textContent = 'Monopoly Bank NFC · ' + t('version') + ' ' + APP_VERSION;
   transferAmt.refresh(); bankAmt.refresh();
 }
 
@@ -670,9 +849,10 @@ function positionPill(animate) {
   pill.style.width = a.offsetWidth + 'px';
   pill.style.height = a.offsetHeight + 'px';
   pill.style.top = a.offsetTop + 'px';
-  pill.style.transform = 'translateX(' + a.offsetLeft + 'px)';
+  pill.style.translate = a.offsetLeft + 'px 0';
   if (!animate) { void pill.offsetWidth; pill.classList.remove('no-anim'); }
 }
+let pillDragging = false;
 function switchTab(name) {
   if (!TABS.includes(name) || name === curTab) return;
   const dir = TABS.indexOf(name) > TABS.indexOf(curTab) ? 'from-right' : 'from-left';
@@ -684,9 +864,8 @@ function switchTab(name) {
     v.classList.toggle('active', on);
     if (on) v.classList.add(dir);
   });
-  positionPill(true);
+  if (!pillDragging) positionPill(true);
   window.scrollTo({ top: 0 });
-  vibe(10);
 }
 $$('.tab').forEach(tb => tb.addEventListener('click', () => switchTab(tb.dataset.view)));
 
@@ -713,16 +892,42 @@ $$('.tab').forEach(tb => tb.addEventListener('click', () => switchTab(tb.dataset
     const i = TABS.indexOf(curTab) + (dx < 0 ? 1 : -1);
     if (i >= 0 && i < TABS.length) switchTab(TABS[i]);
   }, { passive: true });
-  // Slide a finger along the bottom bar to jump between tabs
+  // Drag the glass highlight freely along the bottom bar (no stepping, no vibration)
   const bar = $('.tabbar');
-  const pick = e => {
-    const tc = e.touches[0];
-    const el = document.elementFromPoint(tc.clientX, tc.clientY);
-    const tb = el && el.closest ? el.closest('.tab') : null;
-    if (tb) switchTab(tb.dataset.view);
+  const pill = $('.tab-pill');
+  let dragId = null;
+  const tabEls = () => $$('.tab');
+  function follow(clientX) {
+    const tabs = tabEls();
+    const r = bar.getBoundingClientRect();
+    const w = tabs[0].offsetWidth;
+    const minX = tabs[0].offsetLeft, maxX = tabs[tabs.length - 1].offsetLeft;
+    const x = Math.max(minX, Math.min(maxX, clientX - r.left - w / 2));
+    pill.style.translate = x + 'px 0';
+    // the page follows whichever tab the glass is over
+    let best = tabs[0], bd = Infinity;
+    tabs.forEach(tb => { const d = Math.abs(tb.offsetLeft + tb.offsetWidth / 2 - (x + w / 2)); if (d < bd) { bd = d; best = tb; } });
+    switchTab(best.dataset.view);
+  }
+  bar.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    dragId = e.pointerId;
+    pillDragging = true;
+    try { bar.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+    pill.classList.add('drag');
+    follow(e.clientX);
+  });
+  bar.addEventListener('pointermove', e => { if (e.pointerId === dragId) follow(e.clientX); });
+  const endDrag = e => {
+    if (e.pointerId !== dragId) return;
+    dragId = null;
+    pillDragging = false;
+    pill.classList.remove('drag');
+    positionPill(true);   // settle onto the chosen tab
   };
-  bar.addEventListener('touchstart', pick, { passive: true });
-  bar.addEventListener('touchmove', pick, { passive: true });
+  bar.addEventListener('pointerup', endDrag);
+  bar.addEventListener('pointercancel', endDrag);
+  bar.addEventListener('lostpointercapture', endDrag);
 })();
 
 $('#addForm').addEventListener('submit', e => {
@@ -749,6 +954,7 @@ $('#playerList').addEventListener('click', async e => {
   const p = byId(btn.closest('.player').dataset.id);
   if (!p) return;
   if (btn.dataset.act === 'reg') registerCard(p);
+  if (btn.dataset.act === 'edit') openEdit(p);
   if (btn.dataset.act === 'del') {
     if (!await askConfirm({ title: t('del_title', { name: p.name }), body: t('del_body'), ok: t('delete') })) return;
     state.players = state.players.filter(x => x.id !== p.id);
@@ -758,8 +964,11 @@ $('#playerList').addEventListener('click', async e => {
 
 $('#btnCheck').addEventListener('click', checkBalance);
 $('#btnTransfer').addEventListener('click', doTransfer);
-$('#btnBankIn').addEventListener('click', () => doBank('in', bankAmt.get(), 'note_bank_pays'));
-$('#btnBankOut').addEventListener('click', () => doBank('out', bankAmt.get(), 'note_player_pays'));
+$('#btnBankIn').addEventListener('click', () => doBank('in', bankAmt.get(), $('#bankNote').value || 'note_bank_pays'));
+$('#btnBankOut').addEventListener('click', () => doBank('out', bankAmt.get(), $('#bankNote').value || 'note_player_pays'));
+$('#btnPot').addEventListener('click', collectPot);
+$('#rentChips').addEventListener('click', e => { const b = e.target.closest('.amt-chip'); if (b) transferAmt.set(b.dataset.v); });
+$('#nfcWarnClose').addEventListener('click', () => { try { localStorage.setItem('mb-nfc-warn', '1'); } catch (e) { /* ignore */ } $('#nfcWarn').hidden = true; });
 $$('.quick').forEach(q => q.addEventListener('click', () =>
   doBank(q.dataset.dir, parseInt(q.dataset.amt, 10), q.dataset.note)));
 $('#btnUndo').addEventListener('click', undoLast);
@@ -771,6 +980,9 @@ $('#btnSettings').addEventListener('click', () => {
   $('#setLang').value = state.settings.lang;
   $('#setSim').checked = !!state.settings.sim;
   $('#setSound').checked = state.settings.sound !== false;
+  $('#setPot').checked = !!state.settings.pot;
+  $('#setConfirm').checked = state.settings.confirmBig !== false;
+  $('#setWake').checked = state.settings.wake !== false;
   $('#setSim').disabled = !NFC.ok;
   openModal('settingsModal');
 });
@@ -791,6 +1003,68 @@ $('#setAccent').addEventListener('click', e => {
   state.settings.accent = ACCENTS.includes(b.dataset.v) ? b.dataset.v : 'blue';
   save(); applyTheme(); Sound.scan();
 });
+$('#setPot').addEventListener('change', e => { state.settings.pot = e.target.checked; save(); renderAll(); });
+$('#setConfirm').addEventListener('change', e => { state.settings.confirmBig = e.target.checked; save(); });
+$('#setWake').addEventListener('change', e => { state.settings.wake = e.target.checked; save(); applyWake(); });
+$('#btnExport').addEventListener('click', () => {
+  download('monopoly-bank-backup-' + stamp() + '.json',
+    JSON.stringify({ app: 'monopoly-bank-nfc', version: 1, exportedAt: new Date().toISOString(), data: state }, null, 2), 'application/json');
+  toast(t('exported'));
+});
+$('#btnImport').addEventListener('click', () => $('#impFile').click());
+$('#impFile').addEventListener('change', async e => {
+  const f = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if (!f) return;
+  let next = null;
+  try { next = normalizeState(JSON.parse(await f.text())); } catch (err) { next = null; }
+  if (!next) { Sound.error(); return toast(t('import_bad')); }
+  if (!await askConfirm({ title: t('import_title'), body: t('import_body'), ok: t('import_ok') })) return;
+  state = next;
+  save(); renderAll(); applyWake(); closeModal('settingsModal'); toast(t('imported'));
+});
+$('#btnCsv').addEventListener('click', () => {
+  if (!state.history.length) return toast(t('csv_empty'));
+  const q = v => { v = String(v == null ? '' : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+  const rows = [['time', 'type', 'player_or_from', 'to', 'amount', 'note']];
+  state.history.slice().reverse().forEach(h => {
+    rows.push([new Date(h.t).toISOString(), h.type, h.type === 'transfer' ? h.fromName : h.playerName,
+      h.type === 'transfer' ? h.toName : '', h.amount, h.type === 'pot-collect' ? t('note_pot') : noteLabel(h.note)]);
+  });
+  download('monopoly-bank-history-' + stamp() + '.csv', '\ufeff' + rows.map(r => r.map(q).join(',')).join('\r\n'), 'text/csv');
+  toast(t('exported'));
+});
+$('#histFilter').addEventListener('change', e => { histFilter = e.target.value; renderHistory(); });
+
+/* edit player */
+let editingId = null, editingColor = null;
+function paintEditColors() {
+  $$('#edColors .sw').forEach(b => b.classList.toggle('active', b.dataset.v === editingColor));
+}
+function openEdit(p) {
+  editingId = p.id; editingColor = p.color;
+  $('#edName').value = p.name;
+  $('#edColors').innerHTML = PALETTE.map(c => `<button type="button" class="sw" data-v="${c}" style="--c:${c}" aria-label="${c}"></button>`).join('');
+  paintEditColors();
+  openModal('editModal');
+}
+$('#edColors').addEventListener('click', e => { const b = e.target.closest('.sw'); if (!b) return; editingColor = b.dataset.v; paintEditColors(); });
+$('#edX').addEventListener('click', () => closeModal('editModal'));
+$('#editModal').addEventListener('click', e => { if (e.target.id === 'editModal') closeModal('editModal'); });
+$('#edSave').addEventListener('click', () => {
+  const p = byId(editingId); if (!p) return closeModal('editModal');
+  const name = $('#edName').value.trim();
+  if (!name) return;
+  if (state.players.some(x => x.id !== p.id && x.name.toLowerCase() === name.toLowerCase())) return toast(t('name_exists'));
+  p.name = name; p.color = editingColor || p.color;
+  state.history.forEach(h => {
+    if (h.from === p.id) h.fromName = name;
+    if (h.to === p.id) h.toName = name;
+    if (h.player === p.id) h.playerName = name;
+  });
+  save(); renderAll(); closeModal('editModal'); toast(t('saved'));
+});
+
 $('#setX').addEventListener('click', () => $('#setClose').click());
 $('#settingsModal').addEventListener('click', e => { if (e.target.id === 'settingsModal') $('#setClose').click(); });
 $('#setLang').addEventListener('change', e => {
@@ -814,6 +1088,7 @@ $('#btnResetGame').addEventListener('click', async () => {
   state.settings.start = start;
   state.players.forEach(p => { p.balance = start; });
   state.history = [];
+  state.pot = 0;
   save(); renderAll(); closeModal('settingsModal'); toast(t('game_reset'));
 });
 $('#btnWipe').addEventListener('click', async () => {
@@ -825,6 +1100,7 @@ $('#btnWipe').addEventListener('click', async () => {
 });
 
 renderAll();
+applyWake();
 positionPill(false);
 window.addEventListener('resize', () => positionPill(false));
 window.addEventListener('load', () => positionPill(false));

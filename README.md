@@ -12,6 +12,13 @@ A digital bank for Monopoly that runs in the browser and uses NFC cards. Tap a c
 - **History and undo.** Every transaction is logged and the last one can be undone.
 - **Installable and offline.** Works as a PWA and keeps running without internet once installed.
 - **Sound effects** for card registered, warning and success.
+- **Ranking** of players by balance, **edit** player name and colour.
+- **Quick amounts** for rent and a **reason** (mortgage, redeem, property, houses and hotels, auction) on bank payments.
+- **Free Parking pot** (optional house rule): taxes and fines go into the pot, collect it with a card tap.
+- **Confirmation** for large transfers (M500 or more).
+- **Backup**: export and import all data as JSON, and export history as CSV.
+- **Keeps the screen on** while playing (Wake Lock).
+- **Friendly warning** when the browser has no Web NFC (for example iPhone).
 - **Custom dialogs and SVG icons.** No native browser pop-ups and no emoji.
 - **English by default**, with Bahasa Melayu available in Settings.
 - **Swipeable bottom navigation.** Swipe left or right to change tabs.
@@ -42,8 +49,8 @@ Any NFC tag works, including NTAG213/215/216 stickers and cards. Nothing is writ
 No build step or dependencies are needed.
 
 ```bash
-git clone https://github.com/Bazliaisy/monopolyatmnfc.git
-cd monopolyatmnfc 
+git clone https://github.com/<your-username>/<your-repo>.git
+cd <your-repo>
 python3 -m http.server 8080
 ```
 
@@ -68,7 +75,7 @@ app.js                          App logic, NFC, sounds, translations
 sw.js                           Service worker (offline cache)
 manifest.webmanifest            PWA manifest
 icon-192.png, icon-512.png,
-icon-maskable.png               App icons
+icon-maskable.png, logo.svg      App icons and logo
 monopoly-bank-satu-fail.html    Single-file build
 ```
 

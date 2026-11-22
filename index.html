@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#0b1220">
   <title>Monopoly Bank NFC</title>
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="icon-192.png">
-  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" href="images/icon-192.png">
+  <link rel="apple-touch-icon" href="images/icon-192.png">
   <script>
   try {
     var s = (JSON.parse(localStorage.getItem('monopoly-bank-nfc-v1')) || {}).settings || {};
@@ -23,7 +23,26 @@
 
 <header class="top">
   <div class="brand">
-    <div class="logo">M</div>
+    <div class="logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+<defs>
+<linearGradient id="bgh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e3a8a"/><stop offset=".5" stop-color="#2f80ff"/><stop offset="1" stop-color="#14c8a0"/></linearGradient>
+<linearGradient id="glh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".42"/><stop offset="1" stop-color="#fff" stop-opacity=".12"/></linearGradient>
+<linearGradient id="gdh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe08a"/><stop offset="1" stop-color="#f59e0b"/></linearGradient>
+</defs>
+<rect width="512" height="512" rx="116" fill="url(#bgh)"/>
+<ellipse cx="150" cy="60" rx="260" ry="150" fill="#fff" opacity=".13"/>
+<g transform="">
+<g transform="rotate(-14 230 230)">
+<rect x="82" y="128" width="282" height="186" rx="32" fill="url(#glh)" stroke="#fff" stroke-opacity=".7" stroke-width="4"/>
+<rect x="116" y="176" width="56" height="42" rx="10" fill="#fff" fill-opacity=".88"/>
+<path d="M232 190a26 26 0 0 1 0 46M262 172a50 50 0 0 1 0 82M292 154a74 74 0 0 1 0 118" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" transform="translate(10 -6)"/>
+</g>
+<circle cx="344" cy="338" r="98" fill="#0b1b4a" opacity=".28" transform="translate(0 10)"/>
+<circle cx="344" cy="338" r="96" fill="url(#gdh)" stroke="#fff" stroke-opacity=".8" stroke-width="5"/>
+<circle cx="344" cy="338" r="70" fill="none" stroke="#8a5200" stroke-opacity=".38" stroke-width="6"/>
+<g fill="#7a4700" fill-opacity=".85"><path d="M344 296l-40 22h80z"/><rect x="310" y="326" width="10" height="34" rx="2"/><rect x="339" y="326" width="10" height="34" rx="2"/><rect x="368" y="326" width="10" height="34" rx="2" transform="translate(-4 0)"/><rect x="302" y="366" width="84" height="9" rx="3"/></g>
+</g>
+</svg></div>
     <div>
       <h1>Monopoly Bank</h1>
       <div class="sub" data-i18n="app_sub"></div>
@@ -39,9 +58,18 @@
 
   <!-- PEMAIN -->
   <section id="view-players" class="view active">
+    <div id="nfcWarn" class="card notice" hidden>
+      <span id="nfcWarnText"></span>
+      <button type="button" class="btn ghost small" id="nfcWarnClose" data-i18n="dismiss"></button>
+    </div>
     <div class="hero">
       <div class="hero-label" data-i18n="total_money">Total money in play</div>
       <div class="hero-value" id="totalMoney">M0</div>
+    </div>
+
+    <div id="rankCard" class="card rank-card" hidden>
+      <h2 data-i18n="rank_title"></h2>
+      <div id="rankList" class="rank"></div>
     </div>
 
     <form id="addForm" class="card add-form" autocomplete="off">
@@ -62,12 +90,21 @@
       <h2 data-i18n="transfer_title">Transfer money between players</h2>
       <p class="muted" data-i18n="transfer_desc"></p>
       <div id="transferAmt"></div>
+      <div class="quick-label" data-i18n="quick_amounts"></div>
+      <div class="amt-chips" id="rentChips"></div>
       <button id="btnTransfer" class="btn primary big full" data-i18n="start_transfer">Start transfer</button>
     </div>
   </section>
 
   <!-- BANK -->
   <section id="view-bank" class="view">
+    <div id="potCard" class="card pot-card" hidden>
+      <div class="pot-row">
+        <div><div class="hero-label" data-i18n="pot_title"></div><div class="pot-amt" id="potAmt">M0</div></div>
+        <button id="btnPot" class="btn primary" data-i18n="pot_collect"></button>
+      </div>
+      <p class="muted" data-i18n="pot_desc" style="margin-bottom:0"></p>
+    </div>
     <div class="card">
       <h2 data-i18n="bank_title">Bank actions</h2>
       <p class="muted" data-i18n="bank_desc"></p>
@@ -90,6 +127,16 @@
     <div class="card">
       <h2 data-i18n="other_amount">Other amount</h2>
       <div id="bankAmt"></div>
+      <label class="field"><span data-i18n="bank_note_label"></span>
+        <select id="bankNote">
+          <option value="" data-i18n="note_none"></option>
+          <option value="note_mortgage" data-i18n="note_mortgage"></option>
+          <option value="note_redeem" data-i18n="note_redeem"></option>
+          <option value="note_property" data-i18n="note_property"></option>
+          <option value="note_buildings" data-i18n="note_buildings"></option>
+          <option value="note_auction" data-i18n="note_auction"></option>
+        </select>
+      </label>
       <div class="two-btn">
         <button id="btnBankIn" class="btn good big" data-i18n="bank_pays">Bank pays player</button>
         <button id="btnBankOut" class="btn bad big" data-i18n="player_pays">Player pays bank</button>
@@ -103,6 +150,10 @@
       <div class="hist-head">
         <h2 data-i18n="history_title">Transaction history</h2>
         <button id="btnUndo" class="btn ghost small"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg> <span data-i18n="undo">Undo last</span></button>
+      </div>
+      <div class="hist-tools">
+        <select id="histFilter" class="sel" data-i18n-aria="hist_all"></select>
+        <button id="btnCsv" class="btn ghost small" data-i18n="csv_btn"></button>
       </div>
       <div id="historyList" class="hist"></div>
     </div>
@@ -184,17 +235,36 @@
         <button type="button" class="sw" data-v="pink" style="--c:#ec4899" data-i18n-aria="acc_pink"></button>
       </div>
     </div>
+    <div class="settings-group">
     <label class="check">
       <input id="setSim" type="checkbox"> <span data-i18n="set_sim"></span>
     </label>
     <label class="check">
+      <input id="setPot" type="checkbox"> <span data-i18n="set_pot"></span>
+    </label>
+    <label class="check">
+      <input id="setConfirm" type="checkbox"> <span id="setConfirmTxt"></span>
+    </label>
+    <label class="check">
+      <input id="setWake" type="checkbox"> <span data-i18n="set_wake"></span>
+    </label>
+    <label class="check">
       <input id="setSound" type="checkbox"> <span data-i18n="set_sound"></span>
     </label>
+    </div>
+    <div class="field"><span data-i18n="set_backup"></span>
+      <div class="two-btn" style="margin-top:6px">
+        <button id="btnExport" class="btn ghost" data-i18n="export_btn"></button>
+        <button id="btnImport" class="btn ghost" data-i18n="import_btn"></button>
+      </div>
+      <input id="impFile" type="file" accept=".json,application/json" hidden>
+    </div>
     <div class="two-btn">
       <button id="btnResetGame" class="btn ghost" data-i18n="reset_btn">Restart game (keep players)</button>
       <button id="btnWipe" class="btn bad" data-i18n="wipe_btn">Delete all</button>
     </div>
     <button id="setClose" class="btn primary full" data-i18n="done">Done</button>
+    <div class="ver" id="verLine"></div>
   </div>
 </div>
 
@@ -209,6 +279,21 @@
       <button id="cfCancel" class="btn ghost big" data-i18n="cancel">Cancel</button>
       <button id="cfOk" class="btn bad big">OK</button>
     </div>
+  </div>
+</div>
+
+<!-- Modal edit pemain -->
+<div id="editModal" class="modal">
+  <div class="sheet">
+    <button type="button" class="x-btn" id="edX" data-i18n-aria="close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <h3 data-i18n="edit_title"></h3>
+    <label class="field"><span data-i18n="edit_name"></span>
+      <input id="edName" type="text" maxlength="14" autocomplete="off">
+    </label>
+    <div class="field"><span data-i18n="edit_color"></span>
+      <div class="swatches" id="edColors"></div>
+    </div>
+    <button id="edSave" class="btn primary full" data-i18n="save"></button>
   </div>
 </div>
 

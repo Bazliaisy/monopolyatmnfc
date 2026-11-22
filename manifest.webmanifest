@@ -1,29 +1,29 @@
 {
   "name": "Monopoly Bank NFC",
   "short_name": "Monopoly Bank",
-  "description": "Bank digital Monopoly menggunakan kad NFC",
+  "description": "Digital Monopoly bank using NFC cards",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0b1220",
   "theme_color": "#0b1220",
-  "lang": "ms",
+  "lang": "en",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "images/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-512.png",
+      "src": "images/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-maskable.png",
+      "src": "images/icon-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
