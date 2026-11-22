@@ -76,8 +76,7 @@ sw.js                           Service worker (offline cache)
 manifest.webmanifest            PWA manifest
 images/                         All images: app icons and logo
   icon-192.png, icon-512.png,
-  icon-maskable.png, logo.svg
-monopoly-bank-satu-fail.html    Single-file build
+  icon-maskable.png, logo.svg    Single-file build
 ```
 
 ## Updating a deployed version
