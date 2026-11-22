@@ -1,4 +1,4 @@
-const CACHE = 'monopoly-bank-v6';
+const CACHE = 'monopoly-bank-v7';
 const FILES = [
   './', './index.html', './style.css', './app.js',
   './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable.png'
