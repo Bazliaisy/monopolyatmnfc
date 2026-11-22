@@ -43,7 +43,7 @@ No build step or dependencies are needed.
 
 ```bash
 git clone https://github.com/Bazliaisy/monopolyatmnfc.git
-cd <your-repo>
+cd monopolyatmnfc
 python3 -m http.server 8080
 ```
 
