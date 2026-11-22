@@ -1,1 +1,8 @@
-
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.monopolynfc",
+        "sha256_cert_fingerprints": ["4B:76:34:A7:11:48:C9:1B:FD:C2:E4:75:45:6E:40:5E:20:2E:D9:92:D2:1A:C7:4A:4C:DC:A3:91:08:F4:42:A8"]
+      }
+    }]
