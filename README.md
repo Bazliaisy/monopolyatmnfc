@@ -74,8 +74,9 @@ style.css                       Styles and themes
 app.js                          App logic, NFC, sounds, translations
 sw.js                           Service worker (offline cache)
 manifest.webmanifest            PWA manifest
-icon-192.png, icon-512.png,
-icon-maskable.png, logo.svg      App icons and logo
+images/                         All images: app icons and logo
+  icon-192.png, icon-512.png,
+  icon-maskable.png, logo.svg
 monopoly-bank-satu-fail.html    Single-file build
 ```
 

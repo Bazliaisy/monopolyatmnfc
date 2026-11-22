@@ -1,13 +1,14 @@
-const CACHE = 'monopoly-bank-v12';
+const CACHE = 'monopoly-bank-v13';
 const ASSETS = [
   './',
   './index.html',
   './style.css',
   './app.js',
   './manifest.webmanifest',
-  './icon-192.png',
-  './icon-512.png',
-  './icon-maskable.png'
+  './images/icon-192.png',
+  './images/icon-512.png',
+  './images/icon-maskable.png',
+  './images/logo.svg'
 ];
 
 self.addEventListener('install', e => {
