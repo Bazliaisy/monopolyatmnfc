@@ -42,8 +42,8 @@ Any NFC tag works, including NTAG213/215/216 stickers and cards. Nothing is writ
 No build step or dependencies are needed.
 
 ```bash
-git clone https://github.com/<your-username>/<your-repo>.git
-cd <your-repo>
+git clone https://github.com/Bazliaisy/monopolyatmnfc.git
+cd monopolyatmnfc 
 python3 -m http.server 8080
 ```
 
