@@ -79,3 +79,8 @@ The service worker caches the app. After changing any file, bump the cache name 
 ## Disclaimer
 
 This is an unofficial fan project for personal use. It is not affiliated with or endorsed by Hasbro. Monopoly is a trademark of Hasbro, Inc.
+
+
+## Licence 
+
+Realesed under the [MIT License](LICENSE)
